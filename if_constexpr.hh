@@ -1,3 +1,7 @@
+/*
+ * This file isn't very interesting. Go look at IF_CONSTEXPR.hh
+ * to understand what this little project is all about
+ */
 #include<utility>
 namespace helper {
     template<bool conditional>

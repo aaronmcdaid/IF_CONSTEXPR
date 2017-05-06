@@ -29,6 +29,10 @@
  */
 #include "if_constexpr.hh"
 
+#define IF_CONSTEXPR_SIMPLE(cond) if_constexpr<cond> FIRST_EXPRESSION
+#define FIRST_EXPRESSION(e1) ( [&] () { return e1; } , SECOND_EXPRESSION
+#define SECOND_EXPRESSION(e2)   [&] () { return e2; } ) ()
+
 
 #define IF_CONSTEXPR thing_with_if_constexpr_method{})).OUTER_MACRO(( DEAL_WITH_THE_CONDITIONAL
 
