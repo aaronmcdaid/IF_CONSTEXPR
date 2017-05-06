@@ -23,7 +23,7 @@
  * parentheses. Hence, I hacked it a bit more so that I
  * could type two parentheses just before IF_CONSTEXPR.
  * Anyway, this works:
-        ((IF_CONSTEXPR (true ) (a,b)
+        ((IF_CONSTEXPR_BRACES (true ) (a,b)
             a*b )
             a+b );
  */
@@ -34,7 +34,7 @@
 #define SECOND_EXPRESSION(e2)   [&] () { return e2; } ) ()
 
 
-#define IF_CONSTEXPR thing_with_if_constexpr_method{})).OUTER_MACRO(( DEAL_WITH_THE_CONDITIONAL
+#define IF_CONSTEXPR_BRACES thing_with_if_constexpr_method{})).OUTER_MACRO(( DEAL_WITH_THE_CONDITIONAL
 
 #define OUTER_MACRO(x) FIVE_TOGETHER(EXPAND_WITH_COMMA x)
 #define DEAL_WITH_THE_CONDITIONAL(conditional) conditional , EXPAND_WITH_COMMA
