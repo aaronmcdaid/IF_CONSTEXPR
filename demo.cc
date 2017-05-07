@@ -44,10 +44,13 @@
 #define PASTE(funcname_base,n) PASTE_(funcname_base,n)
 #define PASTE_(x,y) x ## y
 
+#define REVERSE_1(      a) (a)
 #define REVERSE_2(    b,a) (a,b)
 #define REVERSE_3(  c,b,a) (a,b,c)
 #define REVERSE_4(d,c,b,a) (a,b,c,d)
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b,...) [&](auto &&a,auto &&b)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_2(                      ...) [&]()
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_3(a                    ,...) [&](auto &&a)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b                  ,...) [&](auto &&a,auto &&b)
 
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
@@ -102,7 +105,7 @@ int main() {
            a(b)
     );
     auto if_false =
-    IF_CONSTEXPR    ( a, b, false,
+    IF_CONSTEXPR    ( a,    false,
            a(b)
      )(
            a+b
