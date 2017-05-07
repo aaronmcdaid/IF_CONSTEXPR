@@ -45,8 +45,8 @@
 
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_2(                      ...) [&]()
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_3(a,                    ...) [&](auto &&a)
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b                   ...) [&](auto &&a,auto &&b)
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_5(a,b,c                 ...) [&](auto &&a,auto &&b,auto&&c)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b,                  ...) [&](auto &&a,auto &&b)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_5(a,b,c,                ...) [&](auto &&a,auto &&b,auto&&c)
 
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
