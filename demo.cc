@@ -6,7 +6,6 @@
 #include <iostream>
 #include <type_traits>
 #include <tuple>
-#include "IF_CONSTEXPR.hh"
 
 #define IF_CONSTEXPR_TWO(var1, var2, cond, exp1)                                 \
     forward_as_tuple_for_if_constexpr(var1,var2)                                       \
@@ -96,9 +95,6 @@ auto forward_as_tuple_for_if_constexpr(Args&& ... args) {
 int main() {
     int a=3;
     int b=4;
-
-    std:: cout << IF_CONSTEXPR_SIMPLE(true ) ( a*b ) (a+b) << '\n';
-    std:: cout << IF_CONSTEXPR_SIMPLE(false) ( a*b ) (a+b) << '\n';
 
     auto if_true = IF_CONSTEXPR    (       true,
            a*b
