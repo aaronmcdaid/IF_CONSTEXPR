@@ -26,9 +26,9 @@
         ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) { return LAST_MACRO_ARG(__VA_ARGS__); }                \
         ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) LAMBDA_BODY_WITH_CLOSING_BRACE
 
-#define                          LAST_MACRO_ARG(...                   )  EVAL(   FIRST_MACRO_ARG, REVERSE(__VA_ARGS__))
-#define                   SECOND_LAST_MACRO_ARG(...                   )  EVAL(  SECOND_MACRO_ARG, REVERSE(__VA_ARGS__))
-#define            DROP_THE_LAST_TWO_MACRO_ARGS(var1, var2, cond, exp1)  EVAL( EVAL( REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS REVERSE(var1, var2, cond, exp1)))
+#define                          LAST_MACRO_ARG(...                   )       EVAL(          FIRST_MACRO_ARG                REVERSE(__VA_ARGS__)  )
+#define                   SECOND_LAST_MACRO_ARG(...                   )       EVAL(          SECOND_MACRO_ARG               REVERSE(__VA_ARGS__)  )
+#define            DROP_THE_LAST_TWO_MACRO_ARGS(...                   )  EVAL(EVAL(  REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS  REVERSE(__VA_ARGS__)  ))
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1, var2, cond, exp1)  [&](auto&&var1,auto&&var2)
 
 #define EVAL(f, ...) f __VA_ARGS__
