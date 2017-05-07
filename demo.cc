@@ -20,7 +20,7 @@
 
 // Now to implement the variadic version, allowing any number of variables (including zero)
 #define IF_CONSTEXPR(...)                                                                                                 \
-    forward_as_tuple_for_if_constexpr(DROP_THE_LAST_TWO_MACRO_ARGS(__VA_ARGS__))  \
+    forward_as_tuple_for_if_constexpr DROP_THE_LAST_TWO_MACRO_ARGS(__VA_ARGS__)   \
     .if_constexpr(                                                               \
             std::integral_constant<bool, SECOND_LAST_MACRO_ARG(__VA_ARGS__)>{}                                 \
         ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) { return LAST_MACRO_ARG(__VA_ARGS__); }                \
@@ -28,13 +28,14 @@
 
 #define                          LAST_MACRO_ARG(...                   )  EVAL(   FIRST_MACRO_ARG, REVERSE(__VA_ARGS__))
 #define                   SECOND_LAST_MACRO_ARG(...                   )  EVAL(  SECOND_MACRO_ARG, REVERSE(__VA_ARGS__))
-#define            DROP_THE_LAST_TWO_MACRO_ARGS(var1, var2, cond, exp1)  var1, var2
+#define            DROP_THE_LAST_TWO_MACRO_ARGS(var1, var2, cond, exp1)  EVAL( EVAL( REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS REVERSE(var1, var2, cond, exp1)))
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1, var2, cond, exp1)  [&](auto&&var1,auto&&var2)
 
 #define EVAL(f, ...) f __VA_ARGS__
 
 #define                         FIRST_MACRO_ARG(arg1      , ...)  arg1
 #define                        SECOND_MACRO_ARG(arg1, arg2, ...)  arg2
+#define           DROP_THE_FIRST_TWO_MACRO_ARGS(arg1, arg2, ...) (__VA_ARGS__)
 
 #define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
 #define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,THE_ANSWER,...)  THE_ANSWER
