@@ -26,10 +26,10 @@
         ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) { return LAST_MACRO_ARG(__VA_ARGS__); }                \
         ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) LAMBDA_BODY_WITH_CLOSING_BRACE
 
-#define                          LAST_MACRO_ARG(...                   )       EVAL(          FIRST_MACRO_ARG                REVERSE(__VA_ARGS__)  )
-#define                   SECOND_LAST_MACRO_ARG(...                   )       EVAL(          SECOND_MACRO_ARG               REVERSE(__VA_ARGS__)  )
-#define            DROP_THE_LAST_TWO_MACRO_ARGS(...                   )  EVAL(EVAL(  REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS  REVERSE(__VA_ARGS__)  ))
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1, var2, cond, exp1)  [&](auto&&var1,auto&&var2)
+#define                          LAST_MACRO_ARG(...)       EVAL(          FIRST_MACRO_ARG                REVERSE(__VA_ARGS__)  )
+#define                   SECOND_LAST_MACRO_ARG(...)       EVAL(          SECOND_MACRO_ARG               REVERSE(__VA_ARGS__)  )
+#define            DROP_THE_LAST_TWO_MACRO_ARGS(...)  EVAL(EVAL(  REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS  REVERSE(__VA_ARGS__)  ))
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(...) PASTE(ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_, COUNT_MACRO_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
 #define EVAL(f, ...) f __VA_ARGS__
 
@@ -47,6 +47,7 @@
 #define REVERSE_2(    b,a) (a,b)
 #define REVERSE_3(  c,b,a) (a,b,c)
 #define REVERSE_4(d,c,b,a) (a,b,c,d)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b,...) [&](auto &&a,auto &&b)
 
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
