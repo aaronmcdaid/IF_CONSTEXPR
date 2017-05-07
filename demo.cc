@@ -99,10 +99,10 @@ int main() {
     std:: cout << IF_CONSTEXPR_SIMPLE(false) ( a*b ) (a+b) << '\n';
 
     auto if_true =
-    IF_CONSTEXPR    ( a, b, true,
+    IF_CONSTEXPR    (       true,
            a*b
      )(
-           a(b)
+           a+b
     );
     auto if_false =
     IF_CONSTEXPR    ( a,    false,
