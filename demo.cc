@@ -5,6 +5,7 @@
 int main() {
     int a=3;
     int b=4;
+    int c=5;
 
     // First, demostrate the macro-free implementation. The structure
     // of these two statements look pretty strange, but it makes sense
@@ -14,38 +15,37 @@ int main() {
         <<  forward_as_tuple_for_if_constexpr(a,b)
             .if_constexpr(
                     std::integral_constant<bool, true>{}
-                ,   [&](auto&&a,auto&&b){ return a*b; }
-                ,   [&](auto&&a,auto&&b){ return a(b); }
+                ,   [&](auto&&a,auto&&b){ return a*b;    }  // returns '12'
+                ,   [&](auto&&a,auto&&b){ return a(b);   }  // branch not taken
                )
-        <<'\n';
+        <<'\n'; // prints '12'
     std::cout
         <<  forward_as_tuple_for_if_constexpr(a,b)
             .if_constexpr(
                     std::integral_constant<bool, false>{}
-                ,   [&](auto&&a,auto&&b){ return a(b); }
-                ,   [&](auto&&a,auto&&b){ return a+b; }
+                ,   [&](auto&&a,auto&&b){ return a(b);   }  // branch not taken
+                ,   [&](auto&&a,auto&&b){ return a+b;    }  // returns '7'
                )
-        <<'\n';
+        <<'\n'; // prints '7'
 
     // Next, the demonstrations of the IF_CONSTEXPR macro
 
     std:: cout <<    IF_CONSTEXPR    (       true,
-           a*b
+           a*b                      // returns 12
     )(
-           a+b
+           a+b                      // branch not taken
     )
-    << '\n';
+    << '\n';                        // prints '12'
     std:: cout <<    IF_CONSTEXPR    ( a,    false,
-           a(b)
+           a(b)                     // branch not taken
     )(
-           a+b
+           a+b                      // returns 7
     )
-    << '\n';
-    int c=5;
+    << '\n';                        // prints '7'
     std:: cout <<    IF_CONSTEXPR    ( a,b,c,  true,
-           a*b*c
+           a*b*c                    // returns 60
     )(
-           a(b) + c + b(a)
+           a(b) + c + b(a)          // branch not taken
     )
-    << '\n';
+    << '\n';                        // prints '60'
 }
