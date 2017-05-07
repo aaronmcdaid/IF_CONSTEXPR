@@ -31,8 +31,16 @@
 #define            DROP_THE_LAST_TWO_MACRO_ARGS(var1, var2, cond, exp1)  var1, var2
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1, var2, cond, exp1)  [&](auto&&var1,auto&&var2)
 
-#define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 9,8,7,6,5,4,3,2,1)
-#define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,x6,x7,x8,x9,THE_ANSWER,...)  THE_ANSWER
+#define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
+#define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,THE_ANSWER,...)  THE_ANSWER
+
+#define REVERSE(...) PASTE(REVERSE_, COUNT_MACRO_ARGS(__VA_ARGS__))(__VA_ARGS__)
+#define PASTE(funcname_base,n) PASTE_(funcname_base,n)
+#define PASTE_(x,y) x ## y
+
+#define REVERSE_2(    b,a) a,b
+#define REVERSE_3(  c,b,a) a,b,c
+#define REVERSE_4(d,c,b,a) a,b,c,d
 
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
