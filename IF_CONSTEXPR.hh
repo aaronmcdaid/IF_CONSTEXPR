@@ -1,3 +1,12 @@
+/*
+ *  Aaron McDaid aaron.mcdaid@gmail.com  2017-05-08
+ *
+ *  This started in response to this tweet by Eric Niebler
+ *  https://twitter.com/ericniebler/status/859985304068816896
+ *
+ *  See the README.md for more explanation, and demo.cc for
+ *  a couple of small demonstrations
+ */
 #include <type_traits>
 #include <tuple>
 
