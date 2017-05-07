@@ -42,7 +42,8 @@
 #define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 5,4,3,2,1)
 #define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,THE_ANSWER,...)  THE_ANSWER
 
-#define REVERSE(...) PASTE(REVERSE_, COUNT_MACRO_ARGS(__VA_ARGS__))(__VA_ARGS__)
+#define COUNT_THE_ARGS_AND_THEN_CALL_THE_APPROPRIATE_OVERLOAD(basename, ...)  PASTE(basename, COUNT_MACRO_ARGS(__VA_ARGS__))(__VA_ARGS__)
+#define REVERSE(...) COUNT_THE_ARGS_AND_THEN_CALL_THE_APPROPRIATE_OVERLOAD(REVERSE_, __VA_ARGS__)
 #define PASTE(funcname_base,n) PASTE_(funcname_base,n)
 #define PASTE_(x,y) x ## y
 
