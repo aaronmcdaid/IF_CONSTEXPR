@@ -18,6 +18,22 @@
 #define TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) [&](auto&&var1,auto&&var2)
 #define LAMBDA_BODY_WITH_CLOSING_BRACE(...)  { return __VA_ARGS__; })
 
+// Now to implement the variadic version, allowing any number of variables (including zero)
+#define IF_CONSTEXPR(...)                                                                                                 \
+    forward_as_tuple_for_if_constexpr(DROP_THE_LAST_TWO_MACRO_ARGS(__VA_ARGS__))  \
+    .if_constexpr(                                                               \
+            std::integral_constant<bool, SECOND_LAST_MACRO_ARG(__VA_ARGS__)>{}                                 \
+        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) { return LAST_MACRO_ARG(__VA_ARGS__); }                \
+        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) LAMBDA_BODY_WITH_CLOSING_BRACE
+
+#define                          LAST_MACRO_ARG(var1, var2, cond, exp1)  exp1
+#define                   SECOND_LAST_MACRO_ARG(var1, var2, cond, exp1)  cond
+#define            DROP_THE_LAST_TWO_MACRO_ARGS(var1, var2, cond, exp1)  var1, var2
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1, var2, cond, exp1)  [&](auto&&var1,auto&&var2)
+
+#define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 9,8,7,6,5,4,3,2,1)
+#define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,x6,x7,x8,x9,THE_ANSWER,...)  THE_ANSWER
+
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
     return std::forward<F>(f) ( std::integral_constant<size_t, I>{} ... );
@@ -65,13 +81,13 @@ int main() {
     std:: cout << IF_CONSTEXPR_SIMPLE(false) ( a*b ) (a+b) << '\n';
 
     auto if_true =
-    IF_CONSTEXPR_TWO( a, b, true,
+    IF_CONSTEXPR    ( a, b, true,
            a*b
      )(
            a(b)
     );
     auto if_false =
-    IF_CONSTEXPR_TWO( a, b, false,
+    IF_CONSTEXPR    ( a, b, false,
            a(b)
      )(
            a+b
