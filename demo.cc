@@ -37,20 +37,22 @@
 #define                        SECOND_MACRO_ARG(arg1, arg2, ...)  arg2
 #define           DROP_THE_FIRST_TWO_MACRO_ARGS(arg1, arg2, ...) (__VA_ARGS__)
 
-#define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1)
-#define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,THE_ANSWER,...)  THE_ANSWER
+#define COUNT_MACRO_ARGS(...) COUNT_MACRO_ARGS_(__VA_ARGS__, 5,4,3,2,1)
+#define COUNT_MACRO_ARGS_(x1,x2,x3,x4,x5,THE_ANSWER,...)  THE_ANSWER
 
 #define REVERSE(...) PASTE(REVERSE_, COUNT_MACRO_ARGS(__VA_ARGS__))(__VA_ARGS__)
 #define PASTE(funcname_base,n) PASTE_(funcname_base,n)
 #define PASTE_(x,y) x ## y
 
-#define REVERSE_1(      a) (a)
-#define REVERSE_2(    b,a) (a,b)
-#define REVERSE_3(  c,b,a) (a,b,c)
-#define REVERSE_4(d,c,b,a) (a,b,c,d)
+#define REVERSE_1(        a) (a)
+#define REVERSE_2(      b,a) (a,b)
+#define REVERSE_3(    c,b,a) (a,b,c)
+#define REVERSE_4(  d,c,b,a) (a,b,c,d)
+#define REVERSE_5(e,d,c,b,a) (a,b,c,d,e)
 #define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_2(                      ...) [&]()
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_3(a                    ,...) [&](auto &&a)
-#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b                  ,...) [&](auto &&a,auto &&b)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_3(a,                    ...) [&](auto &&a)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_4(a,b                   ...) [&](auto &&a,auto &&b)
+#define ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_5(a,b,c                 ...) [&](auto &&a,auto &&b,auto&&c)
 
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
@@ -98,14 +100,12 @@ int main() {
     std:: cout << IF_CONSTEXPR_SIMPLE(true ) ( a*b ) (a+b) << '\n';
     std:: cout << IF_CONSTEXPR_SIMPLE(false) ( a*b ) (a+b) << '\n';
 
-    auto if_true =
-    IF_CONSTEXPR    (       true,
+    auto if_true = IF_CONSTEXPR    (       true,
            a*b
      )(
            a+b
     );
-    auto if_false =
-    IF_CONSTEXPR    ( a,    false,
+    auto if_false = IF_CONSTEXPR    ( a,    false,
            a(b)
      )(
            a+b
