@@ -14,8 +14,8 @@
     forward_as_tuple_for_if_constexpr(var1,var2)                                 \
     .if_constexpr(                                                               \
             std::integral_constant<bool, cond>{}                                 \
-        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) { return exp1; }          \
-        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) LAMBDA_BODY_WITH_CLOSING_BRACE
+        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) ->decltype(auto) { return exp1; }          \
+        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) ->decltype(auto) LAMBDA_BODY_WITH_CLOSING_BRACE
 
 #define TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) [&](auto&&var1,auto&&var2)
 #define LAMBDA_BODY_WITH_CLOSING_BRACE(...)  { return __VA_ARGS__; })
@@ -25,8 +25,8 @@
     forward_as_tuple_for_if_constexpr DROP_THE_LAST_TWO_MACRO_ARGS(__VA_ARGS__)                                \
     .if_constexpr(                                                                                             \
             std::integral_constant<bool, SECOND_LAST_MACRO_ARG(__VA_ARGS__)>{}                                 \
-        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) { return LAST_MACRO_ARG(__VA_ARGS__); }       \
-        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) LAMBDA_BODY_WITH_CLOSING_BRACE
+        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) ->decltype(auto) { return LAST_MACRO_ARG(__VA_ARGS__); }       \
+        ,   ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS(__VA_ARGS__) ->decltype(auto) LAMBDA_BODY_WITH_CLOSING_BRACE
 
 #define                          LAST_MACRO_ARG(...)       EVAL(          FIRST_MACRO_ARG                REVERSE(__VA_ARGS__)  )
 #define                   SECOND_LAST_MACRO_ARG(...)       EVAL(          SECOND_MACRO_ARG               REVERSE(__VA_ARGS__)  )
@@ -85,7 +85,7 @@ struct forward_as_tuple_for_if_constexpr_helper {
     template<typename T, typename F>
     decltype(auto) if_constexpr(std::  true_type, T&&t, F&&)
     {
-        return apply_integer_sequence<sizeof...(Args)>( [&](auto &&... idxs){
+        return apply_integer_sequence<sizeof...(Args)>( [&](auto &&... idxs) -> decltype(auto) {
                 return std::forward<T>(t)( std::get< std::remove_reference_t<decltype(idxs)>::value >(m_args) ...);
         });
     }
