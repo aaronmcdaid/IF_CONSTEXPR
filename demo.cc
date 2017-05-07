@@ -8,6 +8,16 @@
 #include <tuple>
 #include "IF_CONSTEXPR.hh"
 
+#define IF_CONSTEXPR_TWO(var1, var2, cond, exp1)                                 \
+    forward_as_tuple_for_if_constexpr(var1,var2)                                       \
+    .if_constexpr(                                                               \
+            std::integral_constant<bool, cond>{}                                 \
+        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) { return exp1; }                \
+        ,   TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) LAMBDA_BODY_WITH_CLOSING_BRACE
+
+#define TWO_VARS_AS_GENERIC_LAMBDA_ARGS(var1,var2) [&](auto&&var1,auto&&var2)
+#define LAMBDA_BODY_WITH_CLOSING_BRACE(...)  { return __VA_ARGS__; })
+
 template<size_t ... I, typename F>
 decltype(auto) apply_integer_sequence(F &&f, std:: index_sequence<I...>) {
     return std::forward<F>(f) ( std::integral_constant<size_t, I>{} ... );
@@ -54,11 +64,20 @@ int main() {
     std:: cout << IF_CONSTEXPR_SIMPLE(true ) ( a*b ) (a+b) << '\n';
     std:: cout << IF_CONSTEXPR_SIMPLE(false) ( a*b ) (a+b) << '\n';
 
-    // IF_CONSTEXPR( a, b, true,
-    //       a*b
-    // )(
-    //       a+b
-    // )
+    auto if_true =
+    IF_CONSTEXPR_TWO( a, b, true,
+           a*b
+     )(
+           a(b)
+    );
+    auto if_false =
+    IF_CONSTEXPR_TWO( a, b, false,
+           a(b)
+     )(
+           a+b
+    );
+    std:: cout << if_true  << "\n";
+    std:: cout << if_false << "\n";
 
     std::cout
         <<  forward_as_tuple_for_if_constexpr(a,b)
