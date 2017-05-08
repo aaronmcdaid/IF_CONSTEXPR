@@ -22,8 +22,11 @@
             (void) local_copy_of_args_ref;  \
             (void) local_copy_of_args
 
-#define HANDLE_CONDITION_AND_THE_REST(...)          \
-            constexpr bool condition_variable = (__VA_ARGS__);      HANDLE_FIRST_EXPRESSION_AND_THE_REST
+#define HANDLE_CONDITION_AND_THE_REST(...)                      \
+            constexpr bool condition_variable = (__VA_ARGS__);  \
+            using  first_expression_type = std::conditional_t<condition_variable, local_copy_of_args_ref_t, local_copy_of_args_t     >; \
+            using second_expression_type = std::conditional_t<condition_variable, local_copy_of_args_t    , local_copy_of_args_ref_t >; \
+            HANDLE_FIRST_EXPRESSION_AND_THE_REST
 #define HANDLE_FIRST_EXPRESSION_AND_THE_REST(...)           HANDLE_FIRST_EXPRESSION (__VA_ARGS__)       HANDLE_SECOND_EXPRESSION_AND_THE_REST
 #define HANDLE_SECOND_EXPRESSION_AND_THE_REST(...)          HANDLE_SECOND_EXPRESSION(__VA_ARGS__)       FINISH_WITH_THE_COMPUTATION
 
