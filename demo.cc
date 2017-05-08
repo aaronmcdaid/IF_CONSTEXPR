@@ -56,32 +56,17 @@ int main() {
     std:: cout <<
     [&]() ->decltype(auto) {
 
-        struct local_copy_of_args_t {
-            decltype(a)  &  a;
-            decltype(b)  &  b;
-        };
+        IF_CONSTEXPR_ALL( a,b )(true)( a+b )( a*b )
 
-        auto local_copy_of_args = local_copy_of_args_t  {   a,   b   };
-
-        constexpr bool condition_variable = false;
-
-        auto first_expression_lambda = [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
-            struct first_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
-                first_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
-                decltype(auto)  go() {
-                    return a+(b);
-                }
-            };
-            return first_expression_t( std::move(local_copy_of_args) ) . go();
-        };
-        auto second_expression_lambda = [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
-            struct second_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
-                second_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
+        auto second_expression_lambda =
+        [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
+            struct one_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
+                one_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
                 decltype(auto)  go() {
                     return a*(b);
                 }
             };
-            return second_expression_t( std::move(local_copy_of_args) ) . go();
+            return one_expression_t( std::move(local_copy_of_args) ) . go();
         };
         return
             return_the_first_arg_if_true
