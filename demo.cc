@@ -1,6 +1,7 @@
 #include "IF_CONSTEXPR.hh"
 #include "IF_CONSTEXPR_ALL.hh"
 
+#include <cassert>
 #include <iostream>
 
 int main() {
@@ -59,4 +60,9 @@ int main() {
     std:: cout <<
         IF_CONSTEXPR_ALL( a,b )(false)( a (b))( a*b )
     << '\n';
+
+    auto && refa = IF_CONSTEXPR_ALL( a,b )(true )( a )( b(a));
+    assert(&refa == &a);
+    auto && refb = IF_CONSTEXPR_ALL( a,b )(false )( a )( b);
+    assert(&refb == &b);
 }
