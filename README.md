@@ -5,13 +5,14 @@ Aaron McDaid aaron.mcdaid@gmail.com  2017-05-06
 
 The tweet requested a macro which could transform
 
-        IF_CONSTEXPR (var1,var2)(condition) (
+        IF_CONSTEXPR(var1,var2)(condition) (
             expression1
         )(
             expression2
         )
 
 into
+
         if_constexpr<condition>(
                 [&](auto&& var1, auto&& var2) -> decltype(auto) {
                     return expression1;
@@ -27,9 +28,9 @@ into
 
 
 
-The file IF_CONSTEXPR.hh implements a macro with essentially the same semantics.
-The only visible difference is that this macro requires that a comma "," appears
-just before and after "condition" instead of ")(". i.e. it is used as follows:
+The file [IF_CONSTEXPR.hh] implements a macro with essentially the same semantics.
+The only visible difference is that this macro requires that a comma (`,`) appears
+just before and after `condition` instead of `)(`. i.e. it is used as follows:
 
 
         IF_CONSTEXPR (var1, var2, condition,
@@ -51,19 +52,19 @@ to help it to stand out:
 
 A couple of notes before getting into more details:
 
-    -   this is 'variadic', the number of variables that are 'protected' by this
+    -   this is 'variadic', i.e. the number of variables that are 'protected' by this
         need not be exactly two ("var1" and "var2"). The number can range from
         zero to three. This limit can be made larger by adding extra macro "overloads"
         for "REVERSE_*" and "ALL_BUT_TWO_VARS_AS_GENERIC_LAMBDA_ARGS_*", and
         updating the COUNT_MACRO_ARGS macro.
-    -   For clarity, it is not always necessary to list every variable before the
-        condition that is used in either expression. A subset will usually suffice.
-        Only the variables that would cause an error in the 'wrong' branch need
-        to be listed. Sometimes, this means the variable list can be empty:
+    -   For clarity, it is not always necessary to list every variable that is used
+        in either expression. A subset will usually suffice.  Only the variables that
+        would cause an error in the 'wrong' branch need to be listed. Sometimes, this
+        means the variable list can be empty:
                 IF_CONSTEXPR (condition, expression1)( expression2)
 
 
-==== Why is this useful? =====
+# Why is this useful?
 
 Consider this code:
 
@@ -76,21 +77,21 @@ Consider this code:
         std::cout << a(b) << '\n';
     }
 
-This will fail to compile, as 'a' is an integer and cannot be treated as a function
-in 'a(b)'. This is frustrating however in situations where it can be proven at
+This will fail to compile, as `a` is an integer and cannot be treated as a function
+in `a(b)`. This is frustrating however in situations where it can be proven at
 compile-time that the 'else' branch will never be taken.
 
 C++17 has a feature called 'constexpr if' that solves this problem.
 The purpose of this macro is to implement this in C++14.
 
-==== How does this IF_CONSTEXPR macro work? ====
+# How does this IF_CONSTEXPR macro work?
 
-The file IF_CONSTEXPR.hh is quite long, but the basic technology is straightforward.
+The file [IF_CONSTEXPR.hh] is quite long, but the basic technology is straightforward.
 Most of the complication is related to making it variadic. I'm just going
 to discuss the preprocessor macros here, the C++ code at the bottom of IF_CONSTEXPR.hh
 is not explained here.
 
-If 'a' and 'b' are ints, then 'a(b)' is an error as 'a' is not a function.
+If `a` and `b` are ints, then `a(b)` is an error as `a` is not a function.
 But the following expression is *not* an error;
 
     auto first_lambda = [&](auto && a, auto && b) {
@@ -124,14 +125,14 @@ The values of the two variables are passed into the generic lambdas by first
 storing them in a special object type created by `forward_as_tuple_for_if_constexpr`.
 This has a method called `.if_constexpr` that takes the boolean flag as argument,
 and also the two generic lambdas, and performs that calculation. This is
-a strange design, but it is helpful to arrange it like this to make the macro
-possible.
+a strange order, but this order is helpful as it makes it possible to write the
+macro.
 
 The macro is variadic, but for simplicity I'll just describe the two-argument
 special-case, `IF_CONSTEXPR_TWO`, in more detail here. Notice how this is
 a macro with four arguments `IF_CONSTEXPR_TWO(a,b,false, a(b) )` followed by
 `( a+b )`. The challenge is to ensure that the second expression is handled
-correclty.
+correctly even though it isn't actually in the four arguments.
 
     std:: cout <<    IF_CONSTEXPR_TWO  ( a,b,  false,
            a(b)                     // branch not taken
@@ -140,8 +141,8 @@ correclty.
     )
     << '\n';                        // prints '7'
 
-This two-variable case can be implemented relatively straightforwardly, mapping almost
-exactly to the code above.
+This two-variable case can be implemented relatively straightforwardly, mapping
+to the C++ code above.
 
     #define IF_CONSTEXPR_TWO(var1, var2, cond, exp1)                                 \
         forward_as_tuple_for_if_constexpr(var1,var2)                                 \
@@ -167,7 +168,7 @@ to complete the two-variable macro.
 
 To understand the variadic version (`IF_CONSTEXPR`, taking between zero and three variable names
 before the condition), see the header file for the details. It's basically about writing
-functions to extract (or drop) the last argument (or second-to-last) argument from a collection
+functions to extract (or drop) the last argument (or second-to-last argument) from a collection
 of macro arguments.  This is needed to extract the condition (the second-to-last argument
 to `IF_CONSTEXPR`) or the first expression (the last argument) from the macro.
 
@@ -178,4 +179,5 @@ We also need to drop the last two arguments. It's easy to drop the first two arg
 so to drop the last two arguments, we first reverse the list of arguments, then drop
 the first two, then reverse the remaining arguments again:
 
-    #define            DROP_THE_LAST_TWO_MACRO_ARGS(...)  EVAL(EVAL(  REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS  REVERSE(__VA_ARGS__)  ))
+    #define            DROP_THE_LAST_TWO_MACRO_ARGS(...)  \
+        EVAL(EVAL(  REVERSE DROP_THE_FIRST_TWO_MACRO_ARGS  REVERSE(__VA_ARGS__)  ))
