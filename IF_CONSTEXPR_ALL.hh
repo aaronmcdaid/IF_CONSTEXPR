@@ -13,7 +13,14 @@
                 type_1             var1;            \
                 type_2             var2;            \
             };                                      \
-            auto local_copy_of_args = local_copy_of_args_t  { var1, var2 }
+            struct local_copy_of_args_ref_t {           \
+                type_1           & var1;            \
+                type_2           & var2;            \
+            };                                      \
+            auto local_copy_of_args     = local_copy_of_args_t      { var1, var2 }; \
+            auto local_copy_of_args_ref = local_copy_of_args_ref_t  { var1, var2 }; \
+            (void) local_copy_of_args_ref;  \
+            (void) local_copy_of_args
 
 #define HANDLE_CONDITION_AND_THE_REST(...)          \
             constexpr bool condition_variable = (__VA_ARGS__);      HANDLE_FIRST_EXPRESSION_AND_THE_REST
