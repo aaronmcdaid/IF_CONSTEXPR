@@ -54,26 +54,9 @@ int main() {
     std:: cout << '\n';
 
     std:: cout <<
-    [&]() ->decltype(auto) {
-
-        IF_CONSTEXPR_ALL( a,b )(true)( a+b )( a*b )
-
-        auto second_expression_lambda =
-        [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
-            struct one_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
-                one_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
-                decltype(auto)  go() {
-                    return a*(b);
-                }
-            };
-            return one_expression_t( std::move(local_copy_of_args) ) . go();
-        };
-        return
-            return_the_first_arg_if_true
-            (   std::integral_constant<bool, condition_variable>{}
-            ,    first_expression_lambda
-            ,   second_expression_lambda
-            )
-            ( std::move(local_copy_of_args), empty_t{} );
-    }() << '\n';
+        IF_CONSTEXPR_ALL( a,b )(true )( a+b )( a(b))
+    << '\n';
+    std:: cout <<
+        IF_CONSTEXPR_ALL( a,b )(false)( a(b))( a*b )
+    << '\n';
 }
