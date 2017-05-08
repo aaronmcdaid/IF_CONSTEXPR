@@ -1,4 +1,5 @@
 #include "IF_CONSTEXPR.hh"
+#include "IF_CONSTEXPR_ALL.hh"
 
 #include <iostream>
 
@@ -48,4 +49,30 @@ int main() {
            a(b) + c + b(a)          // branch not taken
     )
     << '\n';                        // prints '60'
+
+
+    auto u=
+    [&]() ->decltype(auto) {
+
+        struct local_copy_of_args_t {
+            decltype(a)  &  a;
+            decltype(b)  &  b;
+        };
+
+        auto local_copy_of_args = local_copy_of_args_t  {   a,   b   };
+
+        auto first_expression_lambda = [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
+            struct first_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
+                first_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
+                decltype(auto)  go() {
+                    return a+(b);
+                }
+            };
+            return first_expression_t( std::move(local_copy_of_args) ) . go();
+        };
+        return first_expression_lambda( std::move(local_copy_of_args), empty_t{} );
+    };
+    (void)u;
+    std:: cout << '\n';
+    std:: cout << u() << '\n';
 }
