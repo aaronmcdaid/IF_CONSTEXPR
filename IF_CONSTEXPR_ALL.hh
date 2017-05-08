@@ -26,11 +26,11 @@
 #define LAMBDA_TO_COMPUTE_AN_EXPRESSION(...) [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {   \
             struct one_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {          \
                 one_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}            \
-                decltype(auto)  go() {                                                                          \
+                decltype(auto)  evaluate_the_expression() {                                                                          \
                     return __VA_ARGS__ ;                                                                        \
                 }                                                                                               \
             };                                                                                                  \
-            return one_expression_t( std::move(local_copy_of_args) ) . go();                                    \
+            return one_expression_t( std::move(local_copy_of_args) ) . evaluate_the_expression();                                    \
         }
 
 #define FINISH_WITH_THE_COMPUTATION                                 \
