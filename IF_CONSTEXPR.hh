@@ -7,6 +7,9 @@
  *  See the README.md for more explanation, and demo.cc for
  *  a couple of small demonstrations
  */
+#ifndef HH_IF_CONSTEXPR_HH
+#define HH_IF_CONSTEXPR_HH
+
 #include <type_traits>
 #include <tuple>
 
@@ -98,3 +101,5 @@ template<typename ... Args>
 auto forward_as_tuple_for_if_constexpr(Args&& ... args) {
     return forward_as_tuple_for_if_constexpr_helper<Args...>( std::forward<Args>(args)... );
 }
+
+#endif
