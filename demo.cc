@@ -61,6 +61,8 @@ int main() {
 
         auto local_copy_of_args = local_copy_of_args_t  {   a,   b   };
 
+        constexpr bool condition_variable = false;
+
         auto first_expression_lambda = [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
             struct first_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
                 first_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
@@ -70,7 +72,22 @@ int main() {
             };
             return first_expression_t( std::move(local_copy_of_args) ) . go();
         };
-        return first_expression_lambda( std::move(local_copy_of_args), empty_t{} );
+        auto second_expression_lambda = [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {
+            struct second_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {
+                second_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}
+                decltype(auto)  go() {
+                    return a*(b);
+                }
+            };
+            return second_expression_t( std::move(local_copy_of_args) ) . go();
+        };
+        return
+            return_the_first_arg_if_true
+            (   std::integral_constant<bool, condition_variable>{}
+            ,    first_expression_lambda
+            ,   second_expression_lambda
+            )
+            ( std::move(local_copy_of_args), empty_t{} );
     };
     (void)u;
     std:: cout << '\n';
