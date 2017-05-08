@@ -51,7 +51,9 @@ int main() {
     << '\n';                        // prints '60'
 
 
-    auto u=
+    std:: cout << '\n';
+
+    std:: cout <<
     [&]() ->decltype(auto) {
 
         struct local_copy_of_args_t {
@@ -88,8 +90,5 @@ int main() {
             ,   second_expression_lambda
             )
             ( std::move(local_copy_of_args), empty_t{} );
-    };
-    (void)u;
-    std:: cout << '\n';
-    std:: cout << u() << '\n';
+    }() << '\n';
 }
