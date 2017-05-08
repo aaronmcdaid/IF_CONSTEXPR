@@ -54,9 +54,9 @@ int main() {
     std:: cout << '\n';
 
     std:: cout <<
-        IF_CONSTEXPR_ALL( a,b )(true )( a+b )( a*(b))
+        IF_CONSTEXPR_ALL( a,b )(true )( a+b )( a (b))
     << '\n';
     std:: cout <<
-        IF_CONSTEXPR_ALL( a,b )(false)( a+(b))( a*b )
+        IF_CONSTEXPR_ALL( a,b )(false)( a (b))( a*b )
     << '\n';
 }

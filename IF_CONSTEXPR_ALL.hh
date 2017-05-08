@@ -10,8 +10,8 @@
             using type_1 = decltype(var1);          \
             using type_2 = decltype(var2);          \
             struct local_copy_of_args_t {           \
-                type_1          &  var1;            \
-                type_2          &  var2;            \
+                type_1             var1;            \
+                type_2             var2;            \
             };                                      \
             auto local_copy_of_args = local_copy_of_args_t  { var1, var2 }
 
