@@ -31,13 +31,13 @@
 #define HANDLE_SECOND_EXPRESSION_AND_THE_REST(...)          HANDLE_SECOND_EXPRESSION(__VA_ARGS__)       FINISH_WITH_THE_COMPUTATION
 
 #define HANDLE_FIRST_EXPRESSION(...)                \
-            auto first_expression_lambda    =   LAMBDA_TO_COMPUTE_AN_EXPRESSION(__VA_ARGS__);
+            auto first_expression_lambda    =   LAMBDA_TO_COMPUTE_AN_EXPRESSION(first_expression_type,  __VA_ARGS__);
 #define HANDLE_SECOND_EXPRESSION(...)               \
-            auto second_expression_lambda   =   LAMBDA_TO_COMPUTE_AN_EXPRESSION(__VA_ARGS__);
+            auto second_expression_lambda   =   LAMBDA_TO_COMPUTE_AN_EXPRESSION(second_expression_type, __VA_ARGS__);
 
-#define LAMBDA_TO_COMPUTE_AN_EXPRESSION(...) [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {   \
-            struct one_expression_t : local_copy_of_args_t, std::remove_reference_t<decltype(dummy)> {          \
-                one_expression_t(local_copy_of_args_t&& l) : local_copy_of_args_t( std::move(l) ) {}            \
+#define LAMBDA_TO_COMPUTE_AN_EXPRESSION(suitable_base_type, ...) [](auto && local_copy_of_args, auto && dummy) ->decltype(auto) {   \
+            struct one_expression_t : suitable_base_type, std::remove_reference_t<decltype(dummy)> {          \
+                one_expression_t(suitable_base_type&& l) : suitable_base_type( std::move(l) ) {}            \
                 decltype(auto)  evaluate_the_expression() {                                                                          \
                     return __VA_ARGS__ ;                                                                        \
                 }                                                                                               \
@@ -52,7 +52,7 @@
             ,    first_expression_lambda                            \
             ,   second_expression_lambda                            \
             )                                                       \
-            ( std::move(local_copy_of_args), empty_t{} );           \
+            ( std::move(local_copy_of_args_ref), empty_t{} );           \
         }()
 
 
