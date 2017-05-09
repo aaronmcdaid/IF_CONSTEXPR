@@ -41,6 +41,15 @@ just before and after `condition` instead of `)(`. i.e. it is used as follows:
 
 This is slightly less aesthetically pleasing than the requested version, but this
 appears to be the best possible with the C/C++ preprocessor.
+
+(**Update May 9th** It is possible after all, to get exactly the requested macro.
+I've implemented it as `IF_CONSTEXPR_ALL` within [IF_CONSTEXPR_ALL.hh].
+The only other difference is that `IF_CONSTEXPR_ALL.hh` requires that the user
+list every variable that appears in the expression, while `IF_CONSTEXPR` simply
+requires only those that need protection from errors.
+In this document, however, I'll focus on `IF_CONSTEXPR` as it's simpler.
+)
+
 You might find it pleasing to put extra, redundant, parentheses around the condition
 to help it to stand out:
 
